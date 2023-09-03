@@ -1,2 +1,45 @@
-package ru.netology.banklogin;public class SqlHelper {
+package ru.netology.banklogin.data;
+
+import lombok.SneakyThrows;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
+
+import javax.management.Query;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class SqlHelper {
+    private static final QueryRunner runner = new QueryRunner();
+    private SqlHelper() {
+    }
+    private static Connection getConn() throws SQLException {
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/app","app", "pass");
+    }
+    @SneakyThrows
+    public static DataHelper.VerificationCode getVerificationCode() {
+        var codeSQL = "SELECT code FROM auth_codes ORDER BY created DESC LIMIT 1";
+        var conn = getConn();
+        var code = runner.query(conn, codeSQL, new ScalarHandler<String>());
+        return new DataHelper.VerificationCode(code);
+    }
+    @SneakyThrows
+    public static void cleanDataBase() {
+        var connection = getConn();
+        runner.execute(connection, "DELETE FROM auth_codes");
+        runner.execute(connection, "DELETE FROM card_transactions");
+        runner.execute(connection, "DELETE FROM cards");
+        runner.execute(connection, "DELETE FROM users");
+    }
+    @SneakyThrows
+    public static void cleanAuthCodes() {
+        var connection = getConn();
+        runner.execute(connection, "DELETE FROM auth_codes");
+    }
+    @SneakyThrows
+    public static String getUserStatus(DataHelper.AuthInfo authInfo) {
+        var codeSQL = "SELECT status FROM users WHERE login IN (\'" + authInfo.getLogin() + "\')";
+        var conn = getConn();
+        return runner.query(conn, codeSQL, new ScalarHandler<String>());
+    }
 }
