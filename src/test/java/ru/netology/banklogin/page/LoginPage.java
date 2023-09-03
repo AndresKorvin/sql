@@ -3,6 +3,7 @@ package ru.netology.banklogin.page;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.Keys;
 import ru.netology.banklogin.data.DataHelper;
 import ru.netology.banklogin.data.SqlHelper;
 
@@ -30,7 +31,9 @@ public class LoginPage {
     }
 
     public void clearLoginAndPasswordFields(){
-        loginField.sendKeys("\b\b\b\b\b\b");
-        passwordField.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b");
+        loginField.sendKeys(Keys.CONTROL + "a");
+        loginField.sendKeys(Keys.DELETE);
+        passwordField.sendKeys(Keys.CONTROL + "a");
+        passwordField.sendKeys(Keys.DELETE);
     }
 }
