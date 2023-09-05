@@ -1,4 +1,4 @@
-package ru.netology.banklogin.test;
+package ru.netology.banklogin.test1;
 
 import org.junit.jupiter.api.*;
 import ru.netology.banklogin.data.DataHelper;
